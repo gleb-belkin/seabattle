@@ -7,8 +7,22 @@ import java.util.ArrayList;
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 16.06.2015.
  */
 public class Ship {
+
     private final Point feedPosition;
     private final ShipDirection direction;
+    //test begin
+    public Point getFeedPosition() {
+        return feedPosition;
+    }
+
+    public ShipDirection getDirection() {
+        return direction;
+    }
+
+    public int getSize() {
+        return size;
+    }
+    //test end
     private final int size;
     private Point bowPosition;
     private ArrayList<Cell> cells = new ArrayList<Cell>();

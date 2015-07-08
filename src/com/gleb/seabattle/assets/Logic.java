@@ -10,9 +10,10 @@ import java.util.Random;
  */
 public class Logic {
 
-    private static final char HIDDEN_CELL_SYMBOL = 'A';
+    private static final char HIDDEN_CELL_SYMBOL = '~';
     private static final char MISSED_SHOT_SYMBOL = '*';
     private static final char HIT_SHOT_SYMBOL = 'X';
+    private static final char SHIP_SYMBOL = '8';
     private static ArrayList<Shot> shotsHistory = new ArrayList<Shot>();
     private static ArrayList<Ship> ships = new ArrayList<Ship>();
     private static final int FIELD_SIZE = 10;
@@ -50,7 +51,7 @@ public class Logic {
     private static void checkHit(int x, int y) {
         for (Iterator<Ship> iterator = ships.iterator(); iterator.hasNext(); ) {
             Ship ship = iterator.next();
-            if (ship.checkHit(x,y)) {
+            if (ship.checkHit(x, y)) {
                 return;
             }
         }
@@ -61,12 +62,42 @@ public class Logic {
         resetFieldMatrix();
         for (Iterator<Shot> iterator = shotsHistory.iterator(); iterator.hasNext(); ) {
             Shot next = iterator.next();
-
             if (next.hit) {
                 fieldMatrix[next.x][next.y] = HIT_SHOT_SYMBOL;
             } else {
                 fieldMatrix[next.x][next.y] = MISSED_SHOT_SYMBOL;
             }
+        }
+        //test begin
+        for (Iterator<Ship> iterator = ships.iterator(); iterator.hasNext(); ) {
+            Ship next = iterator.next();
+            fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y] = SHIP_SYMBOL;
+            for (int i = 0; i < next.getSize(); i++) {
+                switch (next.getDirection()) {
+                    case VERTICAL:
+                        fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y+i+1] = SHIP_SYMBOL;
+                        break;
+                    case HORIZONTAL:
+                        fieldMatrix[next.getFeedPosition().x+i+1][next.getFeedPosition().y] = SHIP_SYMBOL;
+                        break;
+                }
+            }
+        }
+        //test end
+        outputFieldMatrix();
+    }
+
+    private static void outputFieldMatrix() {
+        for (int i = 0; i < fieldMatrix.length; i++) {
+            String after = " ";
+            for (int j = 0; j < fieldMatrix[i].length; j++) {
+
+                if (j == fieldMatrix[i].length) {
+                    after = "";
+                }
+                System.out.printf("%1$s%2$s", fieldMatrix[i][j], after);
+            }
+            System.out.print("\n");
         }
     }
 
