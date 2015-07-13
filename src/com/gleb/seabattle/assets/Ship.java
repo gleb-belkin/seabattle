@@ -10,6 +10,7 @@ public class Ship {
 
     private final Point feedPosition;
     private final ShipDirection direction;
+
     //test begin
     public Point getFeedPosition() {
         return feedPosition;
@@ -48,6 +49,13 @@ public class Ship {
 
     public boolean checkHit(int x, int y) {
         return x >= feedPosition.x && x <= bowPosition.x && y >= feedPosition.y && y <= bowPosition.y;
+    }
+
+    public boolean isHit() {
+        for (Cell cell : cells) {
+
+        }
+        return true;
     }
 
 

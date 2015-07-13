@@ -14,12 +14,12 @@ public class Logic {
     private static final char MISSED_SHOT_SYMBOL = '*';
     private static final char HIT_SHOT_SYMBOL = 'X';
     private static final char SHIP_SYMBOL = '8';
-    private static ArrayList<Shot> shotsHistory = new ArrayList<Shot>();
-    private static ArrayList<Ship> ships = new ArrayList<Ship>();
     private static final int FIELD_SIZE = 10;
     private static final int PLACE_ATTEMPTS_POINT_BY_DIRECTION_LIMIT = 15;
     private static final int PLACE_ATTEMPTS_DIRECTION_BY_SHIP_LIMIT = 10;
     private static final Random RANDOM = new Random();
+    private static ArrayList<Shot> shotsHistory = new ArrayList<Shot>();
+    private static ArrayList<Ship> ships = new ArrayList<Ship>();
     private static char[][] fieldMatrix = new char[FIELD_SIZE][FIELD_SIZE];
 
     public static void newGame() {
@@ -44,8 +44,12 @@ public class Logic {
     }
 
     private static boolean endOfGame() {
-        //todo develop
-        return false;
+        for (Ship ship : ships) {
+            if (!ship.isHit()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static void checkHit(int x, int y) {
@@ -75,10 +79,10 @@ public class Logic {
             for (int i = 0; i < next.getSize(); i++) {
                 switch (next.getDirection()) {
                     case VERTICAL:
-                        fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y+i+1] = SHIP_SYMBOL;
+                        fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y + i + 1] = SHIP_SYMBOL;
                         break;
                     case HORIZONTAL:
-                        fieldMatrix[next.getFeedPosition().x+i+1][next.getFeedPosition().y] = SHIP_SYMBOL;
+                        fieldMatrix[next.getFeedPosition().x + i + 1][next.getFeedPosition().y] = SHIP_SYMBOL;
                         break;
                 }
             }
