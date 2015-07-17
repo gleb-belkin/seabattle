@@ -23,10 +23,11 @@ public class Ship {
     public int getSize() {
         return size;
     }
+
     //test end
     private final int size;
     private Point bowPosition;
-    private ArrayList<Cell> cells = new ArrayList<Cell>();
+    private ArrayList<ShipCell> shipCells = new ArrayList<>();
 
     public Ship(Point feedPosition, ShipDirection direction, int size) {
 
@@ -34,6 +35,13 @@ public class Ship {
         this.direction = direction;
         this.size = size;
         initBowPosition();
+        initCells();
+    }
+
+    private void initCells() {
+        for (int i = 0; i < size; i++) {
+            shipCells.add(new ShipCell());
+        }
     }
 
     private void initBowPosition() {
@@ -48,31 +56,26 @@ public class Ship {
     }
 
     public boolean checkHit(int x, int y) {
-        return x >= feedPosition.x && x <= bowPosition.x && y >= feedPosition.y && y <= bowPosition.y;
+        if (x >= feedPosition.x && x <= bowPosition.x && y >= feedPosition.y && y <= bowPosition.y) {
+            shipCells.get(Math.max(x - feedPosition.x, y - feedPosition.y)).setHit();
+            return true;
+        }
+        return false;
     }
 
     public boolean isHit() {
-        for (Cell cell : cells) {
-
+        for (ShipCell shipCell : shipCells) {
+            if (!shipCell.isHit()) {
+                return false;
+            }
         }
         return true;
     }
 
-
-    private class Cell extends Point {
-
-        private boolean hit = false;
-
-        public Cell(int x, int y) {
-            super(x, y);
+    public boolean isCellHit(int cellIndex) {
+        if (cellIndex < 0 || cellIndex >= size) {
+            return false;
         }
-
-        public boolean isHit() {
-            return hit;
-        }
-
-        public void setHit(boolean hit) {
-            this.hit = hit;
-        }
+        return shipCells.get(cellIndex).isHit();
     }
 }

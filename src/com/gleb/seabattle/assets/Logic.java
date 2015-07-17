@@ -20,7 +20,7 @@ public class Logic {
     private static final Random RANDOM = new Random();
     private static ArrayList<Shot> shotsHistory = new ArrayList<Shot>();
     private static ArrayList<Ship> ships = new ArrayList<Ship>();
-    private static char[][] fieldMatrix = new char[FIELD_SIZE][FIELD_SIZE];
+    private static char[] fieldMatrix = new char[(int) Math.pow(FIELD_SIZE, 2)];
 
     public static void newGame() {
         resetShotsHistory();
@@ -52,64 +52,60 @@ public class Logic {
         return true;
     }
 
-    private static void checkHit(int x, int y) {
+    private static boolean checkHit(int x, int y) {
         for (Iterator<Ship> iterator = ships.iterator(); iterator.hasNext(); ) {
             Ship ship = iterator.next();
             if (ship.checkHit(x, y)) {
-                return;
+                return true;
             }
         }
-        //todo develop
+        return false;
     }
 
     public static void drawField() {
         resetFieldMatrix();
         for (Iterator<Shot> iterator = shotsHistory.iterator(); iterator.hasNext(); ) {
             Shot next = iterator.next();
-            if (next.hit) {
-                fieldMatrix[next.x][next.y] = HIT_SHOT_SYMBOL;
+            if (next.isHit()) {
+                fieldMatrix[convertCoordinatesToCellIndex(next)] = HIT_SHOT_SYMBOL;
             } else {
-                fieldMatrix[next.x][next.y] = MISSED_SHOT_SYMBOL;
+                fieldMatrix[convertCoordinatesToCellIndex(next)] = MISSED_SHOT_SYMBOL;
             }
         }
         //test begin
-        for (Iterator<Ship> iterator = ships.iterator(); iterator.hasNext(); ) {
+        /*for (Iterator<Ship> iterator = ships.iterator(); iterator.hasNext(); ) {
             Ship next = iterator.next();
-            fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y] = SHIP_SYMBOL;
-            for (int i = 0; i < next.getSize(); i++) {
-                switch (next.getDirection()) {
-                    case VERTICAL:
-                        fieldMatrix[next.getFeedPosition().x][next.getFeedPosition().y + i + 1] = SHIP_SYMBOL;
-                        break;
-                    case HORIZONTAL:
-                        fieldMatrix[next.getFeedPosition().x + i + 1][next.getFeedPosition().y] = SHIP_SYMBOL;
-                        break;
-                }
+            int feedPositionIndex = convertCoordinatesToCellIndex(next.getFeedPosition());
+            int index = 0;
+            switch (next.getDirection()) {
+                case VERTICAL:
+                    index = FIELD_SIZE;
+                    break;
+                case HORIZONTAL:
+                    index = 1;
+                    break;
             }
-        }
+            for (int i = 0; i < next.getSize(); i++) {
+                fieldMatrix[feedPositionIndex + i * index] = SHIP_SYMBOL;
+            }
+        }*/
         //test end
         outputFieldMatrix();
     }
 
+    private static int convertCoordinatesToCellIndex(Point point) {
+        return (point.x - 1) * FIELD_SIZE + point.y - 1;
+    }
+
     private static void outputFieldMatrix() {
         for (int i = 0; i < fieldMatrix.length; i++) {
-            String after = " ";
-            for (int j = 0; j < fieldMatrix[i].length; j++) {
-
-                if (j == fieldMatrix[i].length) {
-                    after = "";
-                }
-                System.out.printf("%1$s%2$s", fieldMatrix[i][j], after);
-            }
-            System.out.print("\n");
+            System.out.printf("%1$s%2$s", fieldMatrix[i], (i + 1) % FIELD_SIZE == 0 ? "\n" : "  ");
         }
     }
 
     private static void resetFieldMatrix() {
         for (int i = 0; i < fieldMatrix.length; i++) {
-            for (int j = 0; j < fieldMatrix[i].length; j++) {
-                fieldMatrix[i][j] = HIDDEN_CELL_SYMBOL;
-            }
+            fieldMatrix[i] = HIDDEN_CELL_SYMBOL;
         }
     }
 
@@ -125,6 +121,23 @@ public class Logic {
                 return;
             }
             ships.add(ship);
+            //drawShip(ship);
+        }
+    }
+
+    private static void drawShip(Ship ship) {
+        int feedPositionIndex = convertCoordinatesToCellIndex(ship.getFeedPosition());
+        int index = 0;
+        switch (ship.getDirection()) {
+            case VERTICAL:
+                index = FIELD_SIZE;
+                break;
+            case HORIZONTAL:
+                index = 1;
+                break;
+        }
+        for (int i = 0; i < ship.getSize(); i++) {
+            fieldMatrix[feedPositionIndex + i * index] = SHIP_SYMBOL;
         }
     }
 
@@ -137,10 +150,10 @@ public class Logic {
         int placeAttemptsPointByDirection = 0;
         while (placeAttemptsDirectionByShip < PLACE_ATTEMPTS_DIRECTION_BY_SHIP_LIMIT) {
             ShipDirection direction = ShipDirection.getRandomDirection();
-            GapsData gapsData = initGapsData(direction, shipSize);
+            Point gapsData = initGapsData(direction, shipSize);
             while (placeAttemptsPointByDirection < PLACE_ATTEMPTS_POINT_BY_DIRECTION_LIMIT) {
-                Point feedPosition = new Point(RANDOM.nextInt(FIELD_SIZE - gapsData.gapX), RANDOM.nextInt(FIELD_SIZE - gapsData.gapY));
-                if (positionIsValid(feedPosition, shipSize)) {
+                Point feedPosition = new Point(RANDOM.nextInt(FIELD_SIZE - gapsData.x), RANDOM.nextInt(FIELD_SIZE - gapsData.y));
+                if (positionIsValid(feedPosition, direction, shipSize)) {
                     return new Ship(feedPosition, direction, shipSize);
                 }
                 placeAttemptsPointByDirection++;
@@ -150,12 +163,35 @@ public class Logic {
         return null;
     }
 
-    private static boolean positionIsValid(Point feedPosition, int shipSize) {
-//    todo:    develop
+    private static boolean positionIsValid(Point feedPosition, ShipDirection direction, int shipSize) {
+        /*int minX = Math.max(0, feedPosition.x - 1);
+        int minY = Math.max(0, feedPosition.y - 1);
+        int maxX;
+        int maxY;
+        switch (direction) {
+            case HORIZONTAL:
+                maxX = Math.min(FIELD_SIZE, feedPosition.x + shipSize);
+                maxY = Math.min(FIELD_SIZE, feedPosition.y + 1);
+                break;
+            case VERTICAL:
+                maxX = Math.min(FIELD_SIZE, feedPosition.x + 1);
+                maxY = Math.min(FIELD_SIZE, feedPosition.y + shipSize);
+                break;
+            default:
+                maxX = feedPosition.x;
+                maxY = feedPosition.y;
+        }
+        for (int i = 0; i < maxX - minX + 1; i++) {
+            for (int j = 0; j < maxY - minY + 1; j++) {
+                if (fieldMatrix[(minY + j - 1) * FIELD_SIZE + minX + i] == SHIP_SYMBOL) {
+                    return false;
+                }
+            }
+        }*/
         return true;
     }
 
-    private static GapsData initGapsData(ShipDirection direction, int size) {
+    private static Point initGapsData(ShipDirection direction, int size) {
         int gapX = size;
         int gapY = size;
         switch (direction) {
@@ -168,30 +204,10 @@ public class Logic {
                 gapY = size;
                 break;
         }
-        return new GapsData(gapX, gapY);
+        return new Point(gapX, gapY);
     }
 
     private static void resetShotsHistory() {
         shotsHistory.clear();
-    }
-
-    private static class GapsData {
-        private final int gapX;
-        private final int gapY;
-
-        public GapsData(int gapX, int gapY) {
-            this.gapX = gapX;
-            this.gapY = gapY;
-        }
-    }
-
-    private static class Shot extends Point {
-
-        private final boolean hit;
-
-        public Shot(int x, int y, boolean hit) {
-            super(x, y);
-            this.hit = hit;
-        }
     }
 }
