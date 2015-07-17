@@ -55,9 +55,9 @@ public class Ship {
         }
     }
 
-    public boolean checkHit(int x, int y) {
-        if (x >= feedPosition.x && x <= bowPosition.x && y >= feedPosition.y && y <= bowPosition.y) {
-            shipCells.get(Math.max(x - feedPosition.x, y - feedPosition.y)).setHit();
+    public boolean checkHit(Point point) {
+        if (point.x >= feedPosition.x && point.x <= bowPosition.x && point.y >= feedPosition.y && point.y <= bowPosition.y) {
+            shipCells.get(Math.max(point.x - feedPosition.x, point.y - feedPosition.y)).setHit();
             return true;
         }
         return false;

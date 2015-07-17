@@ -1,5 +1,6 @@
 package com.gleb.seabattle.assets;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,5 +20,10 @@ public class PlayerInteraction {
     public static void askPlayerName() throws IOException {
         System.out.println("Please, introduce yourself");
         playerName = reader.readLine();
+    }
+
+    public static String askShotPoint() throws IOException {
+        System.out.println("Please, enter the coordinates (e.g. c4):");
+        return reader.readLine().replaceAll("\\s+", "").toLowerCase();
     }
 }
