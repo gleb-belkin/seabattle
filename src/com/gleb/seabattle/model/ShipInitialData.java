@@ -1,4 +1,4 @@
-package com.gleb.seabattle.assets;
+package com.gleb.seabattle.model;
 
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 16.06.2015.

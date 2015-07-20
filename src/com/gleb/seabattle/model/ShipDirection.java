@@ -1,4 +1,4 @@
-package com.gleb.seabattle.assets;
+package com.gleb.seabattle.model;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.gleb.seabattle.assets;
+package com.gleb.seabattle.model;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,21 +10,6 @@ public class Ship {
 
     private final Point feedPosition;
     private final ShipDirection direction;
-
-    //test begin
-    public Point getFeedPosition() {
-        return feedPosition;
-    }
-
-    public ShipDirection getDirection() {
-        return direction;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    //test end
     private final int size;
     private Point bowPosition;
     private ArrayList<ShipCell> shipCells = new ArrayList<>();
@@ -36,6 +21,18 @@ public class Ship {
         this.size = size;
         initBowPosition();
         initCells();
+    }
+
+    public Point getFeedPosition() {
+        return feedPosition;
+    }
+
+    public ShipDirection getDirection() {
+        return direction;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     private void initCells() {
@@ -77,5 +74,17 @@ public class Ship {
             return false;
         }
         return shipCells.get(cellIndex).isHit();
+    }
+
+    private class ShipCell {
+        private boolean hit = false;
+
+        public boolean isHit() {
+            return hit;
+        }
+
+        public void setHit() {
+            this.hit = true;
+        }
     }
 }

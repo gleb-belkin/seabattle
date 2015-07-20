@@ -1,7 +1,8 @@
 package com.gleb.seabattle;
 
-import com.gleb.seabattle.assets.Logic;
-import com.gleb.seabattle.assets.PlayerInteraction;
+import com.gleb.seabattle.controller.GeneralController;
+import com.gleb.seabattle.model.GeneralModel;
+import com.gleb.seabattle.view.GeneralView;
 
 import java.io.IOException;
 
@@ -10,19 +11,9 @@ import java.io.IOException;
  */
 public class Seabattle {
     public static void main(String[] args) throws IOException {
-        performInitialPlayerInteraction();
-        Logic.newGame();
-        performGamePlayerInteraction();
-    }
-
-    private static void performGamePlayerInteraction() throws IOException {
-        while (!Logic.endOfGame()) {
-            Logic.performShot(PlayerInteraction.askShotPoint());
-        }
-    }
-
-    private static void performInitialPlayerInteraction() throws IOException {
-        PlayerInteraction.welcomePlayer();
-        PlayerInteraction.askPlayerName();
+        GeneralModel model = new GeneralModel();
+        GeneralView view = new GeneralView(model);
+        GeneralController controller = new GeneralController(model, view);
+        controller.startGame();
     }
 }
