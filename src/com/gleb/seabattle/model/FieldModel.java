@@ -30,14 +30,15 @@ public class FieldModel {
         fieldMatrix = new char[(int) Math.pow(fieldSize, 2)];
     }
 
-    public Shot processShot(Point point) {
+    public boolean processShot(Point point) {
         //todo develop
         Shot shot = checkHit(point);
         if (shot != null) {
             recordShot(shot);
             updateFieldMatrix();
+            return true;
         }
-        return shot;
+        return false;
     }
 
     private Shot checkHit(Point point) {
@@ -51,7 +52,7 @@ public class FieldModel {
                 break;
             }
         }
-        return new DefaultShot(point.x, point.y, isHit);
+        return new Shot(point.x, point.y, isHit);
     }
 
     private boolean pointIsValid(Point point) {

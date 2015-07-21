@@ -3,7 +3,6 @@ package com.gleb.seabattle.controller;
 import com.gleb.seabattle.assets.FieldId;
 import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
-import com.gleb.seabattle.model.Shot;
 import com.gleb.seabattle.view.GeneralView;
 
 import java.util.Random;
@@ -32,13 +31,14 @@ public class GeneralController {
             view.showServiceMessage(ServiceMessages.NEW_GAME_FAILED_TO_START);
             return;
         }
+        view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
+        view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
 //        todo: pause thread instead of infinite loop
         while (model.fieldModel1.allShipsAreHit() || model.fieldModel2.allShipsAreHit()) {
             int shotAttempts = 0;
             while (shotAttempts < SHOT_ATTEMPTS_LIMIT) {
-                Shot shot = lot ? model.fieldModel2.processShot(player1.makeShot()) : model.fieldModel1.processShot(player2.makeShot());
-                if (shot != null) {
-                    view.updateField(shot, lot ? FieldId.FIELD_2 : FieldId.FIELD_1);
+                boolean shotProcessed = lot ? model.fieldModel2.processShot(player1.makeShot()) : model.fieldModel1.processShot(player2.makeShot());
+                if (shotProcessed) {
                     lot = !lot;
                     break;
                 }
@@ -48,6 +48,8 @@ public class GeneralController {
                 view.showServiceMessage(ServiceMessages.SHOT_ATTEMPTS_LIMIT_EXCEEDED);
                 break;
             }
+            view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
+            view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
         }
     }
 

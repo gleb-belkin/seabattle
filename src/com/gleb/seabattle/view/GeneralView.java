@@ -2,9 +2,7 @@ package com.gleb.seabattle.view;
 
 import com.gleb.seabattle.assets.FieldConstants;
 import com.gleb.seabattle.assets.FieldId;
-import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
-import com.gleb.seabattle.model.Shot;
 
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
@@ -16,7 +14,8 @@ public class GeneralView {
         this.model = model;
     }
 
-    public void outputField(char[] fieldMatrix) {
+    public void outputField(FieldId fieldId, char[] fieldMatrix1) {
+        System.out.println(fieldId);
         for (int i = 0; i < FieldConstants.COORDINATE_LETTERS.length(); i++) {
             String prefix = "  ";
             if (i == 0) {
@@ -25,7 +24,7 @@ public class GeneralView {
             System.out.printf("%1$s%2$s", prefix, FieldConstants.COORDINATE_LETTERS.charAt(i));
         }
         System.out.print("\n");
-        for (int i = 0; i < fieldMatrix.length; i++) {
+        for (int i = 0; i < fieldMatrix1.length; i++) {
             String prefix = "";
             String suffix = "  ";
             if (i % model.getFieldSize() == 0) {
@@ -41,21 +40,13 @@ public class GeneralView {
             if ((i + 1) % model.getFieldSize() == 0) {
                 suffix = "\n";
             }
-            System.out.printf("%1$s%2$s%3$s", prefix, fieldMatrix[i], suffix);
+            System.out.printf("%1$s%2$s%3$s", prefix, fieldMatrix1[i], suffix);
         }
     }
-
 
 
     public void showServiceMessage(String message) {
         System.out.printf("[Service message:] %1$s", message);
     }
 
-    public void updateField(Shot shot, FieldId fieldId) {
-        if (shot == null) {
-            showServiceMessage(ServiceMessages.NULL_SHOT);
-            return;
-        }
-        //todo: implement field update
-    }
 }
