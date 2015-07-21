@@ -1,7 +1,6 @@
 package com.gleb.seabattle.controller;
 
 import com.gleb.seabattle.assets.FieldConstants;
-import com.gleb.seabattle.model.Playable;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -13,65 +12,59 @@ import java.util.regex.Pattern;
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
-public class HumanPlayer implements Playable {
-    private static final int SHOT_ATTEMPTS_LIMIT = 5;
+public class HumanPlayer implements Player {
+
     private boolean firstShot = true;
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-    private int shotAttempts;
+
+    public String getName() {
+        return name;
+    }
+
+    private String name;
 
     public HumanPlayer() {
     }
 
     @Override
-    public Point makeShot() throws IOException {
+    public Point makeShot() {
         if (firstShot) {
-            performInitialPlayerInteraction();
+            welcomePlayer();
             firstShot = false;
         }
-        shotAttempts = 0;
-        while (shotAttempts < SHOT_ATTEMPTS_LIMIT) {
-            System.out.println("Please, enter the coordinates (e.g. c4):");
-            String shotCoordinatesString = READER.readLine().replaceAll("\\s+", "").toLowerCase();
-            try {
-                return parseCoordinatesString(shotCoordinatesString);
-            } catch (Exception e) {
-                //
-            }
+        System.out.println("Please, enter the coordinates (e.g. c4):");
+        String shotCoordinatesString = null;
+        try {
+            shotCoordinatesString = READER.readLine().replaceAll("\\s+", "").toLowerCase();
+        } catch (IOException e) {
+            //todo: implement error processing
+            e.printStackTrace();
         }
-
-        performGamePlayerInteraction();
-        return null;
-    }
-    private void performGamePlayerInteraction() throws IOException {
-        /*while (!Logic.endOfGame()) {
-            Logic.performShot(PlayerInteraction.askShotPoint());
-        }*/
+        return parseCoordinatesString(shotCoordinatesString);
     }
 
-    private void performInitialPlayerInteraction() throws IOException {
-        PlayerInteraction.welcomePlayer();
-        PlayerInteraction.askPlayerName();
+    private void welcomePlayer() {
+        System.out.println("Welcome! Please, introduce yourself");
+        try {
+            name = READER.readLine();
+        } catch (IOException e) {
+            //todo: implement error processing
+            e.printStackTrace();
+        }
     }
 
-    private Point parseCoordinatesString(String coordinatesString) throws Exception {
+    private Point parseCoordinatesString(String coordinatesString) {
         Pattern coordinatesPattern = Pattern.compile("^([a-j])(\\d{1,2})$");
         Matcher matcher = coordinatesPattern.matcher(coordinatesString);
+        int numberX = -1;
+        int numberY = -1;
         if (matcher.matches()) {
             String letterX = matcher.group(1);
-            int numberY = Integer.parseInt(matcher.group(2));
-            return new Point(getCoordinateByLetter(letterX), numberY);
+            numberX = FieldConstants.COORDINATE_LETTERS.indexOf(letterX);
+            //Although we need a zero-based point and indexOf() is already zero-based, user input is not (should not be, according to the rules)
+            numberY = Integer.parseInt(matcher.group(2)) - 1;
         }
-        throw new Exception("Coordinates string doesn't match the pattern.");
+        return new Point(numberX, numberY);
     }
-
-    private int getCoordinateByLetter(String letterX) throws Exception {
-        int i = FieldConstants.COORDINATE_LETTERS.indexOf(letterX);
-        if (i != -1) {
-            return i;
-        } else {
-            throw new Exception("Letter out of range");
-        }
-    }
-
 
 }

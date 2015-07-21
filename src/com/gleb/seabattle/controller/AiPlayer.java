@@ -1,14 +1,12 @@
 package com.gleb.seabattle.controller;
 
-import com.gleb.seabattle.model.Playable;
-
 import java.awt.*;
 import java.util.Random;
 
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
-public class AiPlayer implements Playable {
+public class AiPlayer implements Player {
 
 
     private static final Random RANDOM = new Random();
@@ -23,5 +21,10 @@ public class AiPlayer implements Playable {
     public Point makeShot() {
 //todo: develop AI =)
         return new Point(RANDOM.nextInt(fieldSize), RANDOM.nextInt(fieldSize));
+    }
+
+    @Override
+    public String getName() {
+        return "AiPlayer";
     }
 }

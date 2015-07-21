@@ -1,7 +1,10 @@
 package com.gleb.seabattle.view;
 
 import com.gleb.seabattle.assets.FieldConstants;
+import com.gleb.seabattle.assets.FieldId;
+import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
+import com.gleb.seabattle.model.Shot;
 
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
@@ -40,5 +43,19 @@ public class GeneralView {
             }
             System.out.printf("%1$s%2$s%3$s", prefix, fieldMatrix[i], suffix);
         }
+    }
+
+
+
+    public void showServiceMessage(String message) {
+        System.out.printf("[Service message:] %1$s", message);
+    }
+
+    public void updateField(Shot shot, FieldId fieldId) {
+        if (shot == null) {
+            showServiceMessage(ServiceMessages.NULL_SHOT);
+            return;
+        }
+        //todo: implement field update
     }
 }

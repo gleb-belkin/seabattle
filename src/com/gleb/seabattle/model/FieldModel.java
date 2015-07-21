@@ -14,9 +14,14 @@ public class FieldModel {
     private static final int PLACE_ATTEMPTS_POINT_BY_DIRECTION_LIMIT = 15;
     private static final int PLACE_ATTEMPTS_DIRECTION_BY_SHIP_LIMIT = 10;
     private static final Random RANDOM = new Random();
-    private static char[] fieldMatrix;
-    private static ArrayList<Shot> shotsHistory = new ArrayList<>();
-    private static ArrayList<Ship> ships = new ArrayList<>();
+
+    public char[] getFieldMatrix() {
+        return fieldMatrix;
+    }
+
+    private char[] fieldMatrix;
+    private ArrayList<Shot> shotsHistory = new ArrayList<>();
+    private ArrayList<Ship> ships = new ArrayList<>();
     private final int fieldSize;
 
 
@@ -25,14 +30,62 @@ public class FieldModel {
         fieldMatrix = new char[(int) Math.pow(fieldSize, 2)];
     }
 
-    public void processShot(Point point) {
-
+    public Shot processShot(Point point) {
+        //todo develop
+        Shot shot = checkHit(point);
+        if (shot != null) {
+            recordShot(shot);
+            updateFieldMatrix();
+        }
+        return shot;
     }
 
-    public void reset() throws Exception {
+    private Shot checkHit(Point point) {
+        if (!pointIsValid(point)) {
+            return null;
+        }
+        boolean isHit = false;
+        for (Ship ship : ships) {
+            if (ship.checkHit(point)) {
+                isHit = true;
+                break;
+            }
+        }
+        return new DefaultShot(point.x, point.y, isHit);
+    }
+
+    private boolean pointIsValid(Point point) {
+        return point.x >= 0 && point.x < fieldSize && point.y >= 0 && point.y < fieldSize;
+    }
+
+    private void recordShot(Shot shot) {
+        shotsHistory.add(shot);
+    }
+
+    public void updateFieldMatrix() {
+        for (Shot next : shotsHistory) {
+            if (next.isHit()) {
+                fieldMatrix[convertCoordinatesToCellIndex(next.getPoint())] = FieldConstants.HIT;
+            } else {
+                fieldMatrix[convertCoordinatesToCellIndex(next.getPoint())] = FieldConstants.MISS;
+            }
+        }
+        //outputFieldMatrix();
+    }
+
+    public boolean allShipsAreHit() {
+        for (Ship ship : ships) {
+            if (!ship.isHit()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean reset() {
         resetFieldMatrix();
         resetShotsHistory();
-        respawnShips();
+        return respawnShips();
     }
 
     private void resetFieldMatrix() {
@@ -46,18 +99,24 @@ public class FieldModel {
         shotsHistory.clear();
     }
 
-    private void respawnShips() throws Exception {
+    private boolean respawnShips() {
         ships.clear();
         ShipInitialData[] shipsData = ShipInitialData.values();
         for (ShipInitialData data : shipsData) {
-            /*Ship ship = placeShip(data.getSize());
-            ships.add(ship);
-            drawShip(ship);*/
+            Ship ship = placeShip(data.getSize());
+            if (ship != null) {
+                ships.add(ship);
+                drawShip(ship);
+            } else {
+                return false;
+            }
+
         }
+        return true;
 //        resetFieldMatrix();
     }
 
-    private Ship placeShip(int shipSize) throws Exception {
+    private Ship placeShip(int shipSize) {
         int placeAttemptsDirectionByShip = 0;
         int placeAttemptsPointByDirection = 0;
         while (placeAttemptsDirectionByShip < PLACE_ATTEMPTS_DIRECTION_BY_SHIP_LIMIT) {
@@ -72,8 +131,7 @@ public class FieldModel {
             }
             placeAttemptsDirectionByShip++;
         }
-        //todo: create FieldModelException with codes
-        throw new Exception("Failed to place ship");
+        return null;
     }
 
     private void askForRespawn() {
@@ -142,19 +200,5 @@ public class FieldModel {
 
     private int convertCoordinatesToCellIndex(Point point) {
         return point.y * fieldSize + point.x;
-    }
-
-
-    private class Shot extends Point {
-        private final boolean hit;
-
-        public Shot(int x, int y, boolean hit) {
-            super(x, y);
-            this.hit = hit;
-        }
-
-        public boolean isHit() {
-            return hit;
-        }
     }
 }

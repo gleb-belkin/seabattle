@@ -20,12 +20,7 @@ public class GeneralModel {
         fieldModel2 = new FieldModel(fieldSize);
     }
 
-    public void reset() {
-        try {
-            fieldModel1.reset();
-            fieldModel2.reset();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public boolean reset() {
+        return fieldModel1.reset() && fieldModel2.reset();
     }
 }
