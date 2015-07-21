@@ -1,5 +1,6 @@
 package com.gleb.seabattle.controller;
 
+import com.gleb.seabattle.assets.FieldConstants;
 import com.gleb.seabattle.model.Playable;
 
 import java.awt.*;
@@ -14,7 +15,6 @@ import java.util.regex.Pattern;
  */
 public class HumanPlayer implements Playable {
     private static final int SHOT_ATTEMPTS_LIMIT = 5;
-    private static final String COORDINATE_LETTERS = "abcdefghij";
     private boolean firstShot = true;
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     private int shotAttempts;
@@ -43,9 +43,9 @@ public class HumanPlayer implements Playable {
         return null;
     }
     private void performGamePlayerInteraction() throws IOException {
-        while (!Logic.endOfGame()) {
-//            Logic.performShot(PlayerInteraction.askShotPoint());
-        }
+        /*while (!Logic.endOfGame()) {
+            Logic.performShot(PlayerInteraction.askShotPoint());
+        }*/
     }
 
     private void performInitialPlayerInteraction() throws IOException {
@@ -65,7 +65,7 @@ public class HumanPlayer implements Playable {
     }
 
     private int getCoordinateByLetter(String letterX) throws Exception {
-        int i = COORDINATE_LETTERS.indexOf(letterX);
+        int i = FieldConstants.COORDINATE_LETTERS.indexOf(letterX);
         if (i != -1) {
             return i;
         } else {

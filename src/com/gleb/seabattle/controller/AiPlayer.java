@@ -22,6 +22,6 @@ public class AiPlayer implements Playable {
     @Override
     public Point makeShot() {
 //todo: develop AI =)
-        return new Point(RANDOM.nextInt(fieldSize),RANDOM.nextInt(fieldSize));
+        return new Point(RANDOM.nextInt(fieldSize), RANDOM.nextInt(fieldSize));
     }
 }

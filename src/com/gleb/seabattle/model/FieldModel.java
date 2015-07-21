@@ -1,6 +1,6 @@
 package com.gleb.seabattle.model;
 
-import com.gleb.seabattle.assets.CellSymbol;
+import com.gleb.seabattle.assets.FieldConstants;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class FieldModel {
     private void resetFieldMatrix() {
         for (int i = 0; i < fieldMatrix.length; i++) {
 //            todo: is it proper usage of Enum?
-            fieldMatrix[i] = CellSymbol.HIDDEN;
+            fieldMatrix[i] = FieldConstants.HIDDEN;
         }
     }
 
@@ -49,11 +49,11 @@ public class FieldModel {
     private void respawnShips() throws Exception {
         ships.clear();
         ShipInitialData[] shipsData = ShipInitialData.values();
-        /*for (ShipInitialData data : shipsData) {
-            Ship ship = placeShip(data.getSize());
+        for (ShipInitialData data : shipsData) {
+            /*Ship ship = placeShip(data.getSize());
             ships.add(ship);
-            drawShip(ship);
-        }*/
+            drawShip(ship);*/
+        }
 //        resetFieldMatrix();
     }
 
@@ -92,7 +92,7 @@ public class FieldModel {
                 break;
         }
         for (int i = 0; i < ship.getSize(); i++) {
-            fieldMatrix[feedPositionIndex + i * index] = CellSymbol.SHIP;
+            fieldMatrix[feedPositionIndex + i * index] = FieldConstants.SHIP;
         }
     }
 
@@ -132,7 +132,7 @@ public class FieldModel {
         }
         for (int i = 0; i < maxX - minX + 1; i++) {
             for (int j = 0; j < maxY - minY + 1; j++) {
-                if (fieldMatrix[(minY + j) * fieldSize + minX + i] == CellSymbol.SHIP) {
+                if (fieldMatrix[(minY + j) * fieldSize + minX + i] == FieldConstants.SHIP) {
                     return false;
                 }
             }

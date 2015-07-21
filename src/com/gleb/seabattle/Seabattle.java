@@ -10,8 +10,10 @@ import java.io.IOException;
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 16.06.2015.
  */
 public class Seabattle {
+    public static final int FIELD_SIZE = 10;
+
     public static void main(String[] args) throws IOException {
-        GeneralModel model = new GeneralModel();
+        GeneralModel model = new GeneralModel(FIELD_SIZE);
         GeneralView view = new GeneralView(model);
         GeneralController controller = new GeneralController(model, view);
         controller.startGame();

@@ -4,9 +4,21 @@ package com.gleb.seabattle.model;
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
 public class GeneralModel {
-    public static final int FIELD_SIZE = 10;
-    public FieldModel fieldModel1 = new FieldModel(FIELD_SIZE);
-    public FieldModel fieldModel2 = new FieldModel(FIELD_SIZE);
+
+    public int getFieldSize() {
+        return fieldSize;
+    }
+
+    private final int fieldSize;
+    public FieldModel fieldModel1;
+    public FieldModel fieldModel2;
+
+    public GeneralModel(int fieldSize) {
+
+        this.fieldSize = fieldSize;
+        fieldModel1 = new FieldModel(fieldSize);
+        fieldModel2 = new FieldModel(fieldSize);
+    }
 
     public void reset() {
         try {

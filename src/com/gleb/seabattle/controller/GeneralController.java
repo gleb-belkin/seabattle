@@ -26,17 +26,17 @@ public class GeneralController {
 
     public void startGame() throws IOException {
         Playable player1 = new HumanPlayer();
-        Playable player2 = new AiPlayer(model.FIELD_SIZE);
+        Playable player2 = new AiPlayer(model.getFieldSize());
         model.reset();
 //        todo: pause thread instead of infinite loop
-        while (logic.endOfGame()) {
+        /*while (logic.endOfGame()) {
             if (lot) {
                 model.fieldModel2.processShot(player1.makeShot());
             } else {
                 model.fieldModel1.processShot(player2.makeShot());
             }
             lot = !lot;
-        }
+        }*/
     }
 
 }
