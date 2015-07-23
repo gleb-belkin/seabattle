@@ -4,11 +4,16 @@ import com.gleb.seabattle.assets.FieldConstants;
 import com.gleb.seabattle.assets.FieldId;
 import com.gleb.seabattle.model.GeneralModel;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
 public class GeneralView {
     private final GeneralModel model;
+    private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 
     public GeneralView(GeneralModel model) {
         this.model = model;
@@ -47,6 +52,17 @@ public class GeneralView {
 
     public void showServiceMessage(String message) {
         System.out.printf("[Service message:] %1$s", message);
+    }
+
+    public String welcomePlayer() {
+        System.out.println("Welcome! Please, introduce yourself");
+        try {
+            return READER.readLine();
+        } catch (IOException e) {
+            //todo: implement error processing
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

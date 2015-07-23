@@ -11,6 +11,7 @@ public class AiPlayer implements Player {
 
     private static final Random RANDOM = new Random();
     private final int fieldSize;
+    private String name;
 
     public AiPlayer(int fieldSize) {
 //        todo: build field matrix
@@ -26,5 +27,21 @@ public class AiPlayer implements Player {
     @Override
     public String getName() {
         return "AiPlayer";
+    }
+
+    @Override
+    public boolean isManualShipPlacementEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isHuman() {
+        return false;
+    }
+
+    @Override
+    public void setName(String name) {
+
+        this.name = name;
     }
 }

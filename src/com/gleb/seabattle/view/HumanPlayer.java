@@ -1,6 +1,7 @@
-package com.gleb.seabattle.controller;
+package com.gleb.seabattle.view;
 
 import com.gleb.seabattle.assets.FieldConstants;
+import com.gleb.seabattle.controller.Player;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -14,24 +15,42 @@ import java.util.regex.Pattern;
  */
 public class HumanPlayer implements Player {
 
-    private boolean firstShot = true;
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
+
+    public boolean isManualShipPlacementEnabled() {
+        return manualShipPlacementEnabled;
+    }
+
+    @Override
+    public boolean isHuman() {
+        return true;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private final boolean manualShipPlacementEnabled;
 
     public String getName() {
         return name;
     }
 
+
+
     private String name;
 
     public HumanPlayer() {
+        this.manualShipPlacementEnabled = false;
+    }
+
+    public HumanPlayer(boolean manualShipPlacementEnabled) {
+        this.manualShipPlacementEnabled = manualShipPlacementEnabled;
     }
 
     @Override
     public Point makeShot() {
-        if (firstShot) {
-            welcomePlayer();
-            firstShot = false;
-        }
         System.out.println("Please, enter the coordinates (e.g. c4):");
         String shotCoordinatesString = null;
         try {
@@ -41,16 +60,6 @@ public class HumanPlayer implements Player {
             e.printStackTrace();
         }
         return parseCoordinatesString(shotCoordinatesString);
-    }
-
-    private void welcomePlayer() {
-        System.out.println("Welcome! Please, introduce yourself");
-        try {
-            name = READER.readLine();
-        } catch (IOException e) {
-            //todo: implement error processing
-            e.printStackTrace();
-        }
     }
 
     private Point parseCoordinatesString(String coordinatesString) {

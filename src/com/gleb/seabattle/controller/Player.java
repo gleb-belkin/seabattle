@@ -9,4 +9,8 @@ import java.io.IOException;
 public interface Player {
     Point makeShot();
     String getName();
+    void setName(String name);
+    boolean isManualShipPlacementEnabled();
+    boolean isHuman();
+
 }

@@ -4,6 +4,7 @@ import com.gleb.seabattle.assets.FieldId;
 import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
 import com.gleb.seabattle.view.GeneralView;
+import com.gleb.seabattle.view.HumanPlayer;
 
 import java.util.Random;
 
@@ -26,6 +27,9 @@ public class GeneralController {
 
     public void startGame() {
         Player player1 = new HumanPlayer();
+        if (player1.isHuman()) {
+            player1.setName(view.welcomePlayer());
+        }
         Player player2 = new AiPlayer(model.getFieldSize());
         if (!model.reset()) {
             view.showServiceMessage(ServiceMessages.NEW_GAME_FAILED_TO_START);
@@ -34,7 +38,7 @@ public class GeneralController {
         view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
         view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
 //        todo: pause thread instead of infinite loop
-        while (model.fieldModel1.allShipsAreHit() || model.fieldModel2.allShipsAreHit()) {
+        while (!model.fieldModel1.allShipsAreHit() || !model.fieldModel2.allShipsAreHit()) {
             int shotAttempts = 0;
             while (shotAttempts < SHOT_ATTEMPTS_LIMIT) {
                 boolean shotProcessed = lot ? model.fieldModel2.processShot(player1.makeShot()) : model.fieldModel1.processShot(player2.makeShot());
