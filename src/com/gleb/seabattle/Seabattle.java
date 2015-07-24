@@ -3,6 +3,7 @@ package com.gleb.seabattle;
 import com.gleb.seabattle.controller.GeneralController;
 import com.gleb.seabattle.model.GeneralModel;
 import com.gleb.seabattle.view.GeneralView;
+import com.gleb.seabattle.view.SwingView;
 import com.gleb.seabattle.view.View;
 
 import java.io.IOException;

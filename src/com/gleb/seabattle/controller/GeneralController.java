@@ -3,6 +3,8 @@ package com.gleb.seabattle.controller;
 import com.gleb.seabattle.assets.FieldId;
 import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
+import com.gleb.seabattle.model.ShootingStatistics;
+import com.gleb.seabattle.view.HumanPlayer;
 import com.gleb.seabattle.view.View;
 
 import java.util.Random;
@@ -25,12 +27,15 @@ public class GeneralController {
     }
 
     public void startGame() {
-//        Player player1 = new HumanPlayer();
-        Player player1 = new AiPlayer(model.getFieldSize());
+        Player player1 = new HumanPlayer();
+//        Player player1 = new AiPlayer(model.getFieldSize(), "Ai1");
         if (player1.isHuman()) {
             player1.setName(view.welcomePlayer());
+            if (player1.isManualShipPlacementEnabled()) {
+                view.startManualShipPlacement(FieldId.FIELD_1);
+            }
         }
-        Player player2 = new AiPlayer(model.getFieldSize());
+        Player player2 = new AiPlayer(model.getFieldSize(), "Ai2");
         if (!model.reset()) {
             view.showServiceMessage(ServiceMessages.NEW_GAME_FAILED_TO_START);
             return;
@@ -41,10 +46,10 @@ public class GeneralController {
         boolean endOfGame = false;
         while (!endOfGame) {
             if (model.fieldModel1.allShipsAreHit()) {
-                view.declareWinner(player2.getName());
+                ShootingStatistics shootingStatistics = model.fieldModel1.getShootingStatistics();
                 endOfGame = true;
             } else if (model.fieldModel2.allShipsAreHit()) {
-                view.declareWinner(player1.getName());
+                ShootingStatistics shootingStatistics = model.fieldModel2.getShootingStatistics();
                 endOfGame = true;
             } else {
                 int shotAttempts = 0;
@@ -64,6 +69,11 @@ public class GeneralController {
                 view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
             }
         }
+        view.declareWinner(player1.isWinner() ? player1.getName() : player2.getName());
+        ShootingStatistics player1ShootingStatistics = model.fieldModel2.getShootingStatistics();
+        view.showPlayerStatistics(player1.getName(), player1ShootingStatistics.getSucceededShotsNumber(), player1ShootingStatistics.getMissedShotsNumber(), player1ShootingStatistics.getTotalShipCellsNumber(), player1ShootingStatistics.getTotalCellsNumber());
+        ShootingStatistics player2ShootingStatistics = model.fieldModel1.getShootingStatistics();
+        view.showPlayerStatistics(player2.getName(), player2ShootingStatistics.getSucceededShotsNumber(), player2ShootingStatistics.getMissedShotsNumber(), player2ShootingStatistics.getTotalShipCellsNumber(), player2ShootingStatistics.getTotalCellsNumber());
     }
 
 }

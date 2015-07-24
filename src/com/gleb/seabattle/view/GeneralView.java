@@ -70,6 +70,16 @@ public class GeneralView implements View {
 
     @Override
     public void declareWinner(String name) {
-        System.out.printf("%1$s wins!", name);
+        System.out.printf("%1$s wins!\n", name);
+    }
+
+    @Override
+    public void startManualShipPlacement(FieldId fieldId) {
+//        todo: develop
+    }
+
+    @Override
+    public void showPlayerStatistics(String name, int succeededShotsNumber, int missedShotsNumber, int totalShipCellsNumber, int totalCellsNumber) {
+        System.out.printf("[%1$s shooting statistics:]\n\tsucceeded: %2$d\n\tmissed: %3$d\n\ttotalShipCells: %4$d\n\ttotalCells: %5$d\n", name, succeededShotsNumber, missedShotsNumber, totalShipCellsNumber, totalCellsNumber);
     }
 }

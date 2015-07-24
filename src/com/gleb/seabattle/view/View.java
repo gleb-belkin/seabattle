@@ -13,4 +13,8 @@ public interface View {
     String welcomePlayer();
 
     void declareWinner(String name);
+
+    void startManualShipPlacement(FieldId fieldId);
+
+    void showPlayerStatistics(String name, int succeededShotsNumber, int missedShotsNumber, int totalShipCellsNumber, int totalCellsNumber);
 }

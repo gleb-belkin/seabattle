@@ -14,6 +14,7 @@ public class FieldModel {
     private static final int PLACE_ATTEMPTS_POINT_BY_DIRECTION_LIMIT = 15;
     private static final int PLACE_ATTEMPTS_DIRECTION_BY_SHIP_LIMIT = 10;
     private static final Random RANDOM = new Random();
+    private int totalShipCellsNumber = 0;
 
     public char[] getFieldMatrix() {
         return fieldMatrix;
@@ -86,6 +87,7 @@ public class FieldModel {
     public boolean reset() {
         resetFieldMatrix();
         resetShotsHistory();
+        totalShipCellsNumber = 0;
         return respawnShips();
     }
 
@@ -108,6 +110,7 @@ public class FieldModel {
             if (ship != null) {
                 ships.add(ship);
                 drawShip(ship);
+                totalShipCellsNumber+=ship.getSize();
             } else {
                 return false;
             }
@@ -201,5 +204,18 @@ public class FieldModel {
 
     private int convertCoordinatesToCellIndex(Point point) {
         return point.y * fieldSize + point.x;
+    }
+
+    public ShootingStatistics getShootingStatistics() {
+        int successfulShotsNumber = 0;
+        int missedShotsNumber = 0;
+        for (Shot shot : shotsHistory) {
+            if (shot.isHit()) {
+                successfulShotsNumber++;
+            } else {
+                missedShotsNumber++;
+            }
+        }
+        return new ShootingStatistics(successfulShotsNumber, missedShotsNumber, totalShipCellsNumber, fieldSize*fieldSize);
     }
 }

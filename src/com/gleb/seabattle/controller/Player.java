@@ -12,5 +12,6 @@ public interface Player {
     void setName(String name);
     boolean isManualShipPlacementEnabled();
     boolean isHuman();
-
+    boolean isWinner();
+    void makeWinner();
 }

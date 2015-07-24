@@ -1,6 +1,7 @@
 package com.gleb.seabattle.view;
 
 import com.gleb.seabattle.assets.FieldConstants;
+import com.gleb.seabattle.controller.AbstractPlayer;
 import com.gleb.seabattle.controller.Player;
 
 import java.awt.*;
@@ -13,32 +14,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
-public class HumanPlayer implements Player {
+public class HumanPlayer extends AbstractPlayer implements Player {
 
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-
-    public boolean isManualShipPlacementEnabled() {
-        return manualShipPlacementEnabled;
-    }
-
-    @Override
-    public boolean isHuman() {
-        return true;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
     private final boolean manualShipPlacementEnabled;
-
-    public String getName() {
-        return name;
-    }
-
-
-
     private String name;
 
     public HumanPlayer() {
@@ -47,6 +26,15 @@ public class HumanPlayer implements Player {
 
     public HumanPlayer(boolean manualShipPlacementEnabled) {
         this.manualShipPlacementEnabled = manualShipPlacementEnabled;
+    }
+
+    public boolean isManualShipPlacementEnabled() {
+        return manualShipPlacementEnabled;
+    }
+
+    @Override
+    public boolean isHuman() {
+        return true;
     }
 
     @Override
