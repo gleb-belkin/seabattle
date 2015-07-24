@@ -65,4 +65,7 @@ public class GeneralView {
         return null;
     }
 
+    public void declareWinner(String name) {
+        System.out.printf("%1$s wins!", name);
+    }
 }

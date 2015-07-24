@@ -38,22 +38,31 @@ public class GeneralController {
         view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
         view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
 //        todo: pause thread instead of infinite loop
-        while (!model.fieldModel1.allShipsAreHit() || !model.fieldModel2.allShipsAreHit()) {
-            int shotAttempts = 0;
-            while (shotAttempts < SHOT_ATTEMPTS_LIMIT) {
-                boolean shotProcessed = lot ? model.fieldModel2.processShot(player1.makeShot()) : model.fieldModel1.processShot(player2.makeShot());
-                if (shotProcessed) {
-                    lot = !lot;
+        boolean endOfGame = false;
+        while (!endOfGame) {
+            if (model.fieldModel1.allShipsAreHit()) {
+                view.declareWinner(player2.getName());
+                endOfGame = true;
+            } else if (model.fieldModel2.allShipsAreHit()) {
+                view.declareWinner(player1.getName());
+                endOfGame = true;
+            } else {
+                int shotAttempts = 0;
+                while (shotAttempts < SHOT_ATTEMPTS_LIMIT) {
+                    boolean shotProcessed = lot ? model.fieldModel2.processShot(player1.makeShot()) : model.fieldModel1.processShot(player2.makeShot());
+                    if (shotProcessed) {
+                        lot = !lot;
+                        break;
+                    }
+                    shotAttempts++;
+                }
+                if (shotAttempts == SHOT_ATTEMPTS_LIMIT) {
+                    view.showServiceMessage(ServiceMessages.SHOT_ATTEMPTS_LIMIT_EXCEEDED);
                     break;
                 }
-                shotAttempts++;
+                view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
+                view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
             }
-            if (shotAttempts == SHOT_ATTEMPTS_LIMIT) {
-                view.showServiceMessage(ServiceMessages.SHOT_ATTEMPTS_LIMIT_EXCEEDED);
-                break;
-            }
-            view.outputField(FieldId.FIELD_1, model.fieldModel1.getFieldMatrix());
-            view.outputField(FieldId.FIELD_2, model.fieldModel2.getFieldMatrix());
         }
     }
 
