@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Gleb Belkin (gleb.belkin@outlook.com) on 18.07.2015.
  */
-public class GeneralView {
+public class GeneralView implements View {
     private final GeneralModel model;
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 
@@ -19,6 +19,7 @@ public class GeneralView {
         this.model = model;
     }
 
+    @Override
     public void outputField(FieldId fieldId, char[] fieldMatrix1) {
         System.out.println(fieldId);
         for (int i = 0; i < FieldConstants.COORDINATE_LETTERS.length(); i++) {
@@ -50,10 +51,12 @@ public class GeneralView {
     }
 
 
+    @Override
     public void showServiceMessage(String message) {
         System.out.printf("[Service message:] %1$s", message);
     }
 
+    @Override
     public String welcomePlayer() {
         System.out.println("Welcome! Please, introduce yourself");
         try {
@@ -65,6 +68,7 @@ public class GeneralView {
         return null;
     }
 
+    @Override
     public void declareWinner(String name) {
         System.out.printf("%1$s wins!", name);
     }

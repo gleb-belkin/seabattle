@@ -3,8 +3,7 @@ package com.gleb.seabattle.controller;
 import com.gleb.seabattle.assets.FieldId;
 import com.gleb.seabattle.assets.ServiceMessages;
 import com.gleb.seabattle.model.GeneralModel;
-import com.gleb.seabattle.view.GeneralView;
-import com.gleb.seabattle.view.HumanPlayer;
+import com.gleb.seabattle.view.View;
 
 import java.util.Random;
 
@@ -14,10 +13,10 @@ import java.util.Random;
 public class GeneralController {
     private static final int SHOT_ATTEMPTS_LIMIT = 5;
     private final GeneralModel model;
-    private final GeneralView view;
+    private final View view;
     private boolean lot;
 
-    public GeneralController(GeneralModel model, GeneralView view) {
+    public GeneralController(GeneralModel model, View view) {
 
         this.model = model;
         this.view = view;
@@ -26,7 +25,8 @@ public class GeneralController {
     }
 
     public void startGame() {
-        Player player1 = new HumanPlayer();
+//        Player player1 = new HumanPlayer();
+        Player player1 = new AiPlayer(model.getFieldSize());
         if (player1.isHuman()) {
             player1.setName(view.welcomePlayer());
         }
